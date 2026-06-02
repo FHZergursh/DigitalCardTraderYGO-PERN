@@ -8,6 +8,7 @@ export const getAllMonsterCards = async (req, res) => {
 
   } catch (error) {
     console.log(error)
+    return res.status(404).json({success: false, message: error})
   }
 }
 
@@ -19,7 +20,10 @@ export const createMonsterCard = async (req, res) => {
       return res.status(400).json({success: false, message: "Please include the mandatory fields"})
     }
 
+    const newMonster = await sql.query(`INSERT INTO monstercards (name, cardtype, monstertype, level, description, image)
+      VALUES ($1, $2, $3, $4, $5, $6)`, [name, cardtype, monstertype, level, description, image])
 
+    return res.status(200).json({success: true, data: newMonster})
 
   } catch (error) {
     console.log(error)
